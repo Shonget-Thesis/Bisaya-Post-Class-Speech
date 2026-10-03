@@ -1,0 +1,12 @@
+.venv/
+.uv-cache/
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+
+# The supplied protocol authorizes an audio study, not a video modality.
+# Keep video recordings out of Git unless separate ethics/privacy approval is documented.
+Videos/
+
+# Local notebook execution artifacts
+*.nbconvert.ipynb

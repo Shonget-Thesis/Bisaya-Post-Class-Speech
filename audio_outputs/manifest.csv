@@ -1,0 +1,24 @@
+Category,File,Description
+figures,figures/01_affect_and_context_overview.png,PNG figure generated from the audio analysis
+figures,figures/02_spoken_word_frequency.png,PNG figure generated from the audio analysis
+figures,figures/03_representative_waveforms_spectrograms.png,PNG figure generated from the audio analysis
+figures,figures/04_acoustic_comparisons.png,PNG figure generated from the audio analysis
+figures,figures/05_exact_kapoy_comparison.png,PNG figure generated from the audio analysis
+figures,figures/06_model_evaluation.png,PNG figure generated from the audio analysis
+tables,tables/01_validated_metadata.csv,CSV table generated from the audio analysis
+tables,tables/02_acoustic_feature_dataset.csv,CSV table generated from the audio analysis
+tables,tables/02_source_acoustic_features.csv,CSV table generated from the audio analysis
+tables,tables/03_valence_distribution.csv,CSV table generated from the audio analysis
+tables,tables/04_arousal_distribution.csv,CSV table generated from the audio analysis
+tables,tables/05_activity_by_valence.csv,CSV table generated from the audio analysis
+tables,tables/06_spoken_word_frequency.csv,CSV table generated from the audio analysis
+tables,tables/07_spoken_word_by_valence.csv,CSV table generated from the audio analysis
+tables,tables/08_acoustic_summary_by_valence.csv,CSV table generated from the audio analysis
+tables,tables/09_exact_kapoy_acoustic_summary.csv,CSV table generated from the audio analysis
+tables,tables/10_exact_kapoy_observations.csv,CSV table generated from the audio analysis
+tables,tables/11_model_comparison.csv,CSV table generated from the audio analysis
+tables,tables/12_confusion_matrix.csv,CSV table generated from the audio analysis
+tables,tables/13_classification_report.csv,CSV table generated from the audio analysis
+tables,tables/14_top_permutation_features.csv,CSV table generated from the audio analysis
+reports,reports/audio_analysis_report.html,Human-readable analysis report
+reports,reports/audio_analysis_summary.txt,Human-readable analysis report

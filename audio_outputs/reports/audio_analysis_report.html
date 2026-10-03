@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bisaya Post-Class Speech: Audio Analysis</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 1180px; margin: 40px auto; padding: 0 24px; color: #202124; }
+h1, h2 { color: #244b74; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.metric { border: 1px solid #d9e2ec; border-radius: 8px; padding: 14px; background: #f7fafc; }
+.metric strong { display: block; font-size: 1.5rem; margin-top: 5px; }
+.warning { border-left: 5px solid #d97706; padding: 12px 16px; background: #fff7ed; }
+img { width: 100%; height: auto; margin: 12px 0 28px; border: 1px solid #e5e7eb; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin: 12px 0 28px; }
+th, td { border: 1px solid #d1d5db; padding: 7px; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { background: #eaf0f6; }
+</style>
+</head>
+<body>
+<h1>Bisaya Post-Class Speech: Audio Analysis</h1>
+<div class="metrics">
+  <div class="metric">Observations<strong>40</strong></div>
+  <div class="metric">Acoustic features<strong>94</strong></div>
+  <div class="metric">Best candidate<strong>SVM (RBF)</strong></div>
+  <div class="metric">Mean Macro F1<strong>0.522</strong></div>
+</div>
+<p class="warning">Exploratory results only. The sample contains one year level and one session, and there is no independent external test set.</p>
+<h2>Model comparison</h2>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Model</th>
+      <th>Accuracy Mean</th>
+      <th>Accuracy SD</th>
+      <th>Balanced Accuracy Mean</th>
+      <th>Macro F1 Mean</th>
+      <th>Macro F1 SD</th>
+      <th>Macro F1 95% CI Half-Width</th>
+      <th>Macro Precision Mean</th>
+      <th>Macro Recall Mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SVM (RBF)</td>
+      <td>0.550</td>
+      <td>0.112</td>
+      <td>0.543</td>
+      <td>0.522</td>
+      <td>0.097</td>
+      <td>0.085</td>
+      <td>0.582</td>
+      <td>0.543</td>
+    </tr>
+    <tr>
+      <td>k-NN (k=3)</td>
+      <td>0.575</td>
+      <td>0.209</td>
+      <td>0.535</td>
+      <td>0.510</td>
+      <td>0.231</td>
+      <td>0.203</td>
+      <td>0.535</td>
+      <td>0.535</td>
+    </tr>
+    <tr>
+      <td>Random Forest</td>
+      <td>0.525</td>
+      <td>0.105</td>
+      <td>0.518</td>
+      <td>0.481</td>
+      <td>0.136</td>
+      <td>0.119</td>
+      <td>0.509</td>
+      <td>0.518</td>
+    </tr>
+    <tr>
+      <td>Gradient Boosting</td>
+      <td>0.500</td>
+      <td>0.198</td>
+      <td>0.485</td>
+      <td>0.442</td>
+      <td>0.220</td>
+      <td>0.193</td>
+      <td>0.427</td>
+      <td>0.485</td>
+    </tr>
+    <tr>
+      <td>Logistic Regression</td>
+      <td>0.450</td>
+      <td>0.143</td>
+      <td>0.448</td>
+      <td>0.429</td>
+      <td>0.123</td>
+      <td>0.108</td>
+      <td>0.450</td>
+      <td>0.448</td>
+    </tr>
+    <tr>
+      <td>Dummy (Most Frequent)</td>
+      <td>0.575</td>
+      <td>0.068</td>
+      <td>0.500</td>
+      <td>0.364</td>
+      <td>0.028</td>
+      <td>0.025</td>
+      <td>0.288</td>
+      <td>0.500</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Classification report</h2>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1-score</th>
+      <th>support</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Pleasant</th>
+      <td>0.467</td>
+      <td>0.412</td>
+      <td>0.438</td>
+      <td>17.00</td>
+    </tr>
+    <tr>
+      <th>Not Pleasant</th>
+      <td>0.600</td>
+      <td>0.652</td>
+      <td>0.625</td>
+      <td>23.00</td>
+    </tr>
+    <tr>
+      <th>accuracy</th>
+      <td>0.550</td>
+      <td>0.550</td>
+      <td>0.550</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <th>macro avg</th>
+      <td>0.533</td>
+      <td>0.532</td>
+      <td>0.531</td>
+      <td>40.00</td>
+    </tr>
+    <tr>
+      <th>weighted avg</th>
+      <td>0.543</td>
+      <td>0.550</td>
+      <td>0.545</td>
+      <td>40.00</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Affect and context</h2>
+<img src="../figures/01_affect_and_context_overview.png" alt="Affect and educational context charts">
+<h2>Spoken-word labels</h2>
+<img src="../figures/02_spoken_word_frequency.png" alt="Spoken-word frequency chart">
+<h2>Representative speech signals</h2>
+<img src="../figures/03_representative_waveforms_spectrograms.png" alt="Representative waveforms and spectrograms">
+<h2>Acoustic comparisons</h2>
+<img src="../figures/04_acoustic_comparisons.png" alt="Acoustic feature comparisons">
+<h2>Exact Kapoy analysis</h2>
+<img src="../figures/05_exact_kapoy_comparison.png" alt="Exact Kapoy acoustic comparison">
+<h2>Model evaluation</h2>
+<img src="../figures/06_model_evaluation.png" alt="Confusion matrix and held-out permutation features">
+</body>
+</html>
