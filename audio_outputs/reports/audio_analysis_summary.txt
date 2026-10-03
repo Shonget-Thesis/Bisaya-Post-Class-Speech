@@ -3,12 +3,14 @@ Bisaya Post-Class Speech: Audio Analysis Output Summary
 Observations: 40
 Acoustic features per observation: 94
 Exact Kapoy observations: 20
-Best exploratory candidate: SVM (RBF)
-Mean accuracy: 0.550
-Majority-class accuracy baseline: 0.575
-Mean Macro F1: 0.522
-Macro F1 SD: 0.097
-Mean balanced accuracy: 0.543
+Best Valence candidate: SVM (RBF)
+  - Mean accuracy: 0.550
+  - Majority-class accuracy baseline: 0.575
+  - Mean Macro F1: 0.522 (SD: 0.097)
+  - Mean balanced accuracy: 0.543
+Best Arousal candidate: Logistic Regression
+  - Mean accuracy: 0.725
+  - Mean Macro F1: 0.662
 
 Interpretation: exploratory only. The dataset is small, contains one year level and one session,
-and has no independent external test set. Do not describe the result as a validated system.
+and has no independent external test set. Incorporates 2D Affect Quadrant mapping (Valence x Arousal).

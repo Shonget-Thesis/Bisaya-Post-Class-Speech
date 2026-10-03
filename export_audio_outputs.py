@@ -292,6 +292,84 @@ axes[1].set_title("Top Held-out Permutation Features")
 fig.tight_layout()
 save_figure(fig, "06_model_evaluation.png")
 
+# --- AROUSAL EVALUATION ---
+y_arousal = full["Arousal_Binary"].to_numpy()
+splits_arousal = list(splitter.split(X, y_arousal, groups=groups))
+arousal_model_rows = []
+for name, model in models.items():
+    scores_a = cross_validate(model, X, y_arousal, cv=splits_arousal, scoring=scoring, n_jobs=1, error_score="raise")
+    fold_f1_a = scores_a["test_f1_macro"]
+    arousal_model_rows.append({
+        "Model": name,
+        "Accuracy Mean": scores_a["test_accuracy"].mean(),
+        "Accuracy SD": scores_a["test_accuracy"].std(ddof=1),
+        "Balanced Accuracy Mean": scores_a["test_balanced_accuracy"].mean(),
+        "Macro F1 Mean": fold_f1_a.mean(),
+        "Macro F1 SD": fold_f1_a.std(ddof=1),
+        "Macro Precision Mean": scores_a["test_precision_macro"].mean(),
+        "Macro Recall Mean": scores_a["test_recall_macro"].mean(),
+    })
+arousal_model_results = pd.DataFrame(arousal_model_rows).sort_values("Macro F1 Mean", ascending=False).reset_index(drop=True)
+arousal_model_results.to_csv(TABLES / "15_arousal_model_comparison.csv", index=False)
+
+best_arousal_row = arousal_model_results[arousal_model_results["Model"] != "Dummy (Most Frequent)"].iloc[0]
+best_arousal_name = best_arousal_row["Model"]
+best_arousal_model = models[best_arousal_name]
+arousal_predictions = cross_val_predict(best_arousal_model, X, y_arousal, cv=splits_arousal, n_jobs=1)
+arousal_class_order = ["High Arousal", "Low/Mod Arousal"]
+arousal_matrix = confusion_matrix(y_arousal, arousal_predictions, labels=arousal_class_order)
+pd.DataFrame(arousal_matrix, index=arousal_class_order, columns=arousal_class_order).rename_axis("True").to_csv(
+    TABLES / "16_arousal_confusion_matrix.csv"
+)
+arousal_report = pd.DataFrame(classification_report(
+    y_arousal, arousal_predictions, labels=arousal_class_order, output_dict=True, zero_division=0
+)).T
+arousal_report.to_csv(TABLES / "17_arousal_classification_report.csv")
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+sns.heatmap(arousal_matrix, annot=True, fmt="d", cmap="Purples", xticklabels=arousal_class_order, yticklabels=arousal_class_order, ax=axes[0])
+axes[0].set_title(f"Out-of-Fold Confusion Matrix (Arousal): {best_arousal_name}")
+axes[0].set_xlabel("Predicted")
+axes[0].set_ylabel("True")
+sns.barplot(data=arousal_model_results[arousal_model_results["Model"] != "Dummy (Most Frequent)"], x="Macro F1 Mean", y="Model", color="#9467BD", ax=axes[1])
+axes[1].set_title("Arousal Model Comparison (Macro F1)")
+fig.tight_layout()
+save_figure(fig, "07_arousal_model_evaluation.png")
+
+# --- 2D AFFECT QUADRANT MAPPING ---
+def get_quadrant(val, ar):
+    is_p = (val == "Pleasant")
+    is_h = ("High" in ar)
+    if is_p and is_h:
+        return "Pleasant-Activated (Q1)"
+    elif is_p and not is_h:
+        return "Pleasant-Deactivated (Q4)"
+    elif not is_p and is_h:
+        return "Unpleasant-Activated (Q2)"
+    else:
+        return "Unpleasant-Deactivated (Q3)"
+
+true_quadrants = [get_quadrant(v, a) for v, a in zip(y, y_arousal)]
+pred_quadrants = [get_quadrant(v, a) for v, a in zip(predictions, arousal_predictions)]
+
+quadrant_df = pd.DataFrame({
+    "Participant Code": metadata["Participant Code"],
+    "Spoken Word": metadata["Spoken Word"],
+    "True Valence": y,
+    "True Arousal": y_arousal,
+    "True Quadrant": true_quadrants,
+    "Predicted Quadrant": pred_quadrants,
+})
+quadrant_counts = quadrant_df["True Quadrant"].value_counts().rename_axis("Affect Quadrant").reset_index(name="Count")
+quadrant_counts.to_csv(TABLES / "18_2d_affect_quadrant_distribution.csv", index=False)
+
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.countplot(data=quadrant_df, y="True Quadrant", palette="Set2", ax=ax)
+ax.set_title("Distribution of Post-Class 2D Affect Quadrants (N=40)")
+ax.set_xlabel("Student Count")
+fig.tight_layout()
+save_figure(fig, "08_2d_affect_quadrants.png")
+
 majority_baseline = metadata["Valence_Binary"].value_counts(normalize=True).max()
 best_row = candidate_results.iloc[0]
 summary_lines = [
@@ -300,19 +378,20 @@ summary_lines = [
     f"Observations: {len(metadata)}",
     f"Acoustic features per observation: {len(acoustic_columns)}",
     f"Exact Kapoy observations: {len(kapoy)}",
-    f"Best exploratory candidate: {best_name}",
-    f"Mean accuracy: {best_row['Accuracy Mean']:.3f}",
-    f"Majority-class accuracy baseline: {majority_baseline:.3f}",
-    f"Mean Macro F1: {best_row['Macro F1 Mean']:.3f}",
-    f"Macro F1 SD: {best_row['Macro F1 SD']:.3f}",
-    f"Mean balanced accuracy: {best_row['Balanced Accuracy Mean']:.3f}",
+    f"Best Valence candidate: {best_name}",
+    f"  - Mean accuracy: {best_row['Accuracy Mean']:.3f}",
+    f"  - Majority-class accuracy baseline: {majority_baseline:.3f}",
+    f"  - Mean Macro F1: {best_row['Macro F1 Mean']:.3f} (SD: {best_row['Macro F1 SD']:.3f})",
+    f"  - Mean balanced accuracy: {best_row['Balanced Accuracy Mean']:.3f}",
+    f"Best Arousal candidate: {best_arousal_name}",
+    f"  - Mean accuracy: {best_arousal_row['Accuracy Mean']:.3f}",
+    f"  - Mean Macro F1: {best_arousal_row['Macro F1 Mean']:.3f}",
     "",
     "Interpretation: exploratory only. The dataset is small, contains one year level and one session,",
-    "and has no independent external test set. Do not describe the result as a validated system.",
+    "and has no independent external test set. Incorporates 2D Affect Quadrant mapping (Valence x Arousal).",
 ]
 (REPORTS / "audio_analysis_summary.txt").write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
 
-# Generate a portable report from the same corrected calculations as the CSV outputs.
 for superseded_report in (
     REPORTS / "audio_analysis_notebook.html",
     REPORTS / "bisaya_affect_recognition.ipynb",
@@ -324,7 +403,7 @@ html_report = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bisaya Post-Class Speech: Audio Analysis</title>
+<title>Bisaya Post-Class Speech: Audio Analysis & 2D Affect</title>
 <style>
 body {{ font-family: Arial, sans-serif; max-width: 1180px; margin: 40px auto; padding: 0 24px; color: #202124; }}
 h1, h2 {{ color: #244b74; }}
@@ -340,30 +419,30 @@ th {{ background: #eaf0f6; }}
 </style>
 </head>
 <body>
-<h1>Bisaya Post-Class Speech: Audio Analysis</h1>
+<h1>Bisaya Post-Class Speech: Audio Analysis & 2D Affect Recognition</h1>
 <div class="metrics">
   <div class="metric">Observations<strong>{len(metadata)}</strong></div>
   <div class="metric">Acoustic features<strong>{len(acoustic_columns)}</strong></div>
-  <div class="metric">Best candidate<strong>{best_name}</strong></div>
-  <div class="metric">Mean Macro F1<strong>{best_row['Macro F1 Mean']:.3f}</strong></div>
+  <div class="metric">Best Valence Model<strong>{best_name}</strong></div>
+  <div class="metric">Valence Macro F1<strong>{best_row['Macro F1 Mean']:.3f}</strong></div>
+  <div class="metric">Best Arousal Model<strong>{best_arousal_name}</strong></div>
+  <div class="metric">Arousal Macro F1<strong>{best_arousal_row['Macro F1 Mean']:.3f}</strong></div>
 </div>
 <p class="warning">Exploratory results only. The sample contains one year level and one session, and there is no independent external test set.</p>
-<h2>Model comparison</h2>
+<h2>1. Valence Model Comparison</h2>
 {model_results.round(3).to_html(index=False)}
-<h2>Classification report</h2>
+<h2>2. Valence Classification Report</h2>
 {report.round(3).to_html()}
-<h2>Affect and context</h2>
-<img src="../figures/01_affect_and_context_overview.png" alt="Affect and educational context charts">
-<h2>Spoken-word labels</h2>
-<img src="../figures/02_spoken_word_frequency.png" alt="Spoken-word frequency chart">
-<h2>Representative speech signals</h2>
-<img src="../figures/03_representative_waveforms_spectrograms.png" alt="Representative waveforms and spectrograms">
-<h2>Acoustic comparisons</h2>
-<img src="../figures/04_acoustic_comparisons.png" alt="Acoustic feature comparisons">
-<h2>Exact Kapoy analysis</h2>
+<h2>3. Arousal Model Comparison</h2>
+{arousal_model_results.round(3).to_html(index=False)}
+<h2>4. 2D Affect Quadrant Distribution</h2>
+{quadrant_counts.to_html(index=False)}
+<h2>Figures & Visual Evaluations</h2>
+<img src="../figures/06_model_evaluation.png" alt="Valence Model Evaluation">
+<img src="../figures/07_arousal_model_evaluation.png" alt="Arousal Model Evaluation">
+<img src="../figures/08_2d_affect_quadrants.png" alt="2D Affect Quadrant Distribution">
 <img src="../figures/05_exact_kapoy_comparison.png" alt="Exact Kapoy acoustic comparison">
-<h2>Model evaluation</h2>
-<img src="../figures/06_model_evaluation.png" alt="Confusion matrix and held-out permutation features">
+<img src="../figures/04_acoustic_comparisons.png" alt="Acoustic feature comparisons">
 </body>
 </html>
 """
@@ -387,4 +466,5 @@ pd.DataFrame(manifest_rows).to_csv(OUTPUT / "manifest.csv", index=False)
 print(f"Created audio output package at: {OUTPUT}")
 print(f"Figures: {len(list(FIGURES.glob('*.png')))}")
 print(f"Tables: {len(list(TABLES.glob('*.csv')))}")
-print(f"Best exploratory model: {best_name}")
+print(f"Best Valence model: {best_name}")
+print(f"Best Arousal model: {best_arousal_name}")

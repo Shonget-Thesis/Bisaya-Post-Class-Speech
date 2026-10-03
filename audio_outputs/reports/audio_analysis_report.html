@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bisaya Post-Class Speech: Audio Analysis</title>
+<title>Bisaya Post-Class Speech: Audio Analysis & 2D Affect</title>
 <style>
 body { font-family: Arial, sans-serif; max-width: 1180px; margin: 40px auto; padding: 0 24px; color: #202124; }
 h1, h2 { color: #244b74; }
@@ -19,15 +19,17 @@ th { background: #eaf0f6; }
 </style>
 </head>
 <body>
-<h1>Bisaya Post-Class Speech: Audio Analysis</h1>
+<h1>Bisaya Post-Class Speech: Audio Analysis & 2D Affect Recognition</h1>
 <div class="metrics">
   <div class="metric">Observations<strong>40</strong></div>
   <div class="metric">Acoustic features<strong>94</strong></div>
-  <div class="metric">Best candidate<strong>SVM (RBF)</strong></div>
-  <div class="metric">Mean Macro F1<strong>0.522</strong></div>
+  <div class="metric">Best Valence Model<strong>SVM (RBF)</strong></div>
+  <div class="metric">Valence Macro F1<strong>0.522</strong></div>
+  <div class="metric">Best Arousal Model<strong>Logistic Regression</strong></div>
+  <div class="metric">Arousal Macro F1<strong>0.662</strong></div>
 </div>
 <p class="warning">Exploratory results only. The sample contains one year level and one session, and there is no independent external test set.</p>
-<h2>Model comparison</h2>
+<h2>1. Valence Model Comparison</h2>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -68,13 +70,13 @@ th { background: #eaf0f6; }
     <tr>
       <td>Random Forest</td>
       <td>0.525</td>
-      <td>0.105</td>
-      <td>0.518</td>
-      <td>0.481</td>
-      <td>0.136</td>
-      <td>0.119</td>
-      <td>0.509</td>
-      <td>0.518</td>
+      <td>0.056</td>
+      <td>0.505</td>
+      <td>0.466</td>
+      <td>0.084</td>
+      <td>0.074</td>
+      <td>0.514</td>
+      <td>0.505</td>
     </tr>
     <tr>
       <td>Gradient Boosting</td>
@@ -111,7 +113,7 @@ th { background: #eaf0f6; }
     </tr>
   </tbody>
 </table>
-<h2>Classification report</h2>
+<h2>2. Valence Classification Report</h2>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -160,17 +162,115 @@ th { background: #eaf0f6; }
     </tr>
   </tbody>
 </table>
-<h2>Affect and context</h2>
-<img src="../figures/01_affect_and_context_overview.png" alt="Affect and educational context charts">
-<h2>Spoken-word labels</h2>
-<img src="../figures/02_spoken_word_frequency.png" alt="Spoken-word frequency chart">
-<h2>Representative speech signals</h2>
-<img src="../figures/03_representative_waveforms_spectrograms.png" alt="Representative waveforms and spectrograms">
-<h2>Acoustic comparisons</h2>
-<img src="../figures/04_acoustic_comparisons.png" alt="Acoustic feature comparisons">
-<h2>Exact Kapoy analysis</h2>
+<h2>3. Arousal Model Comparison</h2>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Model</th>
+      <th>Accuracy Mean</th>
+      <th>Accuracy SD</th>
+      <th>Balanced Accuracy Mean</th>
+      <th>Macro F1 Mean</th>
+      <th>Macro F1 SD</th>
+      <th>Macro Precision Mean</th>
+      <th>Macro Recall Mean</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Logistic Regression</td>
+      <td>0.725</td>
+      <td>0.163</td>
+      <td>0.670</td>
+      <td>0.662</td>
+      <td>0.222</td>
+      <td>0.691</td>
+      <td>0.670</td>
+    </tr>
+    <tr>
+      <td>k-NN (k=3)</td>
+      <td>0.725</td>
+      <td>0.105</td>
+      <td>0.657</td>
+      <td>0.644</td>
+      <td>0.183</td>
+      <td>0.681</td>
+      <td>0.657</td>
+    </tr>
+    <tr>
+      <td>Random Forest</td>
+      <td>0.700</td>
+      <td>0.209</td>
+      <td>0.627</td>
+      <td>0.627</td>
+      <td>0.252</td>
+      <td>0.703</td>
+      <td>0.627</td>
+    </tr>
+    <tr>
+      <td>SVM (RBF)</td>
+      <td>0.675</td>
+      <td>0.068</td>
+      <td>0.637</td>
+      <td>0.622</td>
+      <td>0.085</td>
+      <td>0.678</td>
+      <td>0.637</td>
+    </tr>
+    <tr>
+      <td>Gradient Boosting</td>
+      <td>0.600</td>
+      <td>0.240</td>
+      <td>0.590</td>
+      <td>0.577</td>
+      <td>0.238</td>
+      <td>0.603</td>
+      <td>0.590</td>
+    </tr>
+    <tr>
+      <td>Dummy (Most Frequent)</td>
+      <td>0.650</td>
+      <td>0.056</td>
+      <td>0.500</td>
+      <td>0.393</td>
+      <td>0.020</td>
+      <td>0.325</td>
+      <td>0.500</td>
+    </tr>
+  </tbody>
+</table>
+<h2>4. 2D Affect Quadrant Distribution</h2>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Affect Quadrant</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Unpleasant-Deactivated (Q3)</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <td>Pleasant-Activated (Q1)</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Pleasant-Deactivated (Q4)</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>Unpleasant-Activated (Q2)</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Figures & Visual Evaluations</h2>
+<img src="../figures/06_model_evaluation.png" alt="Valence Model Evaluation">
+<img src="../figures/07_arousal_model_evaluation.png" alt="Arousal Model Evaluation">
+<img src="../figures/08_2d_affect_quadrants.png" alt="2D Affect Quadrant Distribution">
 <img src="../figures/05_exact_kapoy_comparison.png" alt="Exact Kapoy acoustic comparison">
-<h2>Model evaluation</h2>
-<img src="../figures/06_model_evaluation.png" alt="Confusion matrix and held-out permutation features">
+<img src="../figures/04_acoustic_comparisons.png" alt="Acoustic feature comparisons">
 </body>
 </html>

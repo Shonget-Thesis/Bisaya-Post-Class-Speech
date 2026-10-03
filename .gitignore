@@ -10,3 +10,5 @@ Videos/
 
 # Local notebook execution artifacts
 *.nbconvert.ipynb
+scratch/
+

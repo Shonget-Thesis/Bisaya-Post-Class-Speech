@@ -1,0 +1,33 @@
+{
+  "model_architecture": "SVM (RBF Kernel) with StandardScaler",
+  "targets": {
+    "valence": {
+      "classes": [
+        "Not Pleasant",
+        "Pleasant"
+      ],
+      "distribution": {
+        "Not Pleasant": 23,
+        "Pleasant": 17
+      }
+    },
+    "arousal": {
+      "classes": [
+        "High Arousal",
+        "Low Arousal"
+      ],
+      "distribution": {
+        "Low Arousal": 26,
+        "High Arousal": 14
+      }
+    }
+  },
+  "affect_quadrants": {
+    "Pleasant-Activated": "Pleasant + High Arousal (Energetic, excited)",
+    "Pleasant-Deactivated": "Pleasant + Low Arousal (Calm, relaxed, relieved)",
+    "Unpleasant-Activated": "Not Pleasant + High Arousal (Tense, frustrated, overwhelmed)",
+    "Unpleasant-Deactivated": "Not Pleasant + Low Arousal (Tired, drained, fatigued)"
+  },
+  "num_features": 94,
+  "n_samples_trained": 40
+}
