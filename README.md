@@ -90,7 +90,7 @@ For a non-interactive execution:
 .\.venv\Scripts\python -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=900 bisaya_affect_recognition.ipynb
 ```
 
-The notebook's older modeling cells are retained as exploratory work. Use the evaluation exported by `export_audio_outputs.py` for the current reported model results.
+The notebook now evaluates valence and arousal with the same model settings and fold-local participant-grouped evaluation as `export_audio_outputs.py`. It loads the existing feature CSV by default; set `REEXTRACT_FEATURES = True` to regenerate it. Its final cell checks current metrics against saved exports and reports discrepancies without overwriting them. Regenerate the output package when adopting updated results, and keep the runtime versions with the report.
 
 ## Generate the audio output package
 

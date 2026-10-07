@@ -1,0 +1,29 @@
+{
+  "valence": {
+    "prediction": "Pleasant",
+    "probabilities": {
+      "Not Pleasant": 0.8245590771387785,
+      "Pleasant": 0.1754409228612214
+    }
+  },
+  "arousal": {
+    "prediction": "Low Arousal",
+    "probabilities": {
+      "High Arousal": 0.19131971391900182,
+      "Low Arousal": 0.8086802860809985
+    }
+  },
+  "acoustic_summary": {
+    "duration_sec": 0.51,
+    "pitch_f0_mean_hz": 142.4,
+    "pitch_f0_std_hz": 16.9,
+    "rms_energy_mean": 0.1035,
+    "zero_crossing_rate_mean": 0.1125,
+    "spectral_centroid_mean_hz": 2820.4
+  },
+  "sample": "Demo sample A (first metadata row; training recording)",
+  "model": "Saved RBF SVM models for both targets",
+  "feature_count": 94,
+  "combined_prediction": "Pleasant + Low/Moderate Arousal",
+  "limitation": "Training-recording demonstration, not independent evaluation. Probabilities are model estimates, not accuracy or verified emotional certainty."
+}

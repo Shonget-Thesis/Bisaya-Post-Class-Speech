@@ -1,0 +1,14 @@
+PROTOTYPE SAMPLE OUTPUT
+Sample: Demo sample A (training recording)
+Models: RBF SVM for valence and arousal
+Acoustic features: 94
+Trimmed duration: 0.51 seconds
+Mean pitch: 142.4 Hz
+Valence prediction: Pleasant
+  Not Pleasant: 82.5%
+  Pleasant: 17.5%
+Arousal prediction: Low Arousal
+  High Arousal: 19.1%
+  Low Arousal: 80.9%
+Combined prediction: Pleasant + Low/Moderate Arousal
+Training-recording demonstration, not independent evaluation. Probabilities are model estimates, not accuracy or verified emotional certainty.
