@@ -20,7 +20,6 @@ if str(ROOT_DIR) not in sys.path:
 from inference.feature_extractor import extract_audio_features, get_feature_names
 
 DEFAULT_BUNDLE_PATH = ROOT_DIR / "models" / "bisaya_ser_models.joblib"
-LEGACY_VALENCE_PATH = ROOT_DIR / "models" / "bisaya_ser_svm.joblib"
 
 
 def get_affect_region_info(valence: str, arousal: str) -> dict:
@@ -67,18 +66,15 @@ def predict_audio(audio_path: str, model_bundle_path: Path = DEFAULT_BUNDLE_PATH
     df_features = pd.DataFrame([features_vector], columns=feature_names)
 
     # 2. Load Models
-    if model_bundle_path.is_file():
-        bundle = joblib.load(model_bundle_path)
-        valence_model = bundle.get("valence_model")
-        arousal_model = bundle.get("arousal_model")
-    elif LEGACY_VALENCE_PATH.is_file():
-        valence_model = joblib.load(LEGACY_VALENCE_PATH)
-        arousal_model = None
-    else:
+    if not model_bundle_path.is_file():
         raise FileNotFoundError(
             f"Model not found at {model_bundle_path}. "
-            "Please run 'python inference/train_and_save_model.py' first."
+            "Please run 'bisaya_affect_recognition.ipynb' to train and export the model bundle first."
         )
+
+    bundle = joblib.load(model_bundle_path)
+    valence_model = bundle.get("valence_model")
+    arousal_model = bundle.get("arousal_model")
 
     # 3. Valence Prediction
     val_pred = valence_model.predict(df_features)[0]

@@ -49,7 +49,10 @@ def save_figure(fig, filename):
 
 
 metadata = pd.read_csv(ROOT / "bisaya_post_class_speech_metadata.csv")
-source_features = pd.read_csv(ROOT / "bisaya_extracted_features.csv")
+features_path = ROOT / "processed_data" / "bisaya_extracted_features.csv"
+if not features_path.is_file():
+    features_path = ROOT / "bisaya_extracted_features.csv"
+source_features = pd.read_csv(features_path)
 
 required = [
     "Participant Code", "Year Level", "Class Activity", "Session", "Spoken Word",

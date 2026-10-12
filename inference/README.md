@@ -11,7 +11,6 @@ It implements **Russell's 2D Circumplex Model of Affect**, estimating both **Val
 ```text
 inference/
 ├── feature_extractor.py       # 94-feature extraction using librosa (YIN F0, RMS, ZCR, MFCCs)
-├── train_and_save_model.py    # Trains dual Valence & Arousal SVM models to `models/`
 ├── predict.py                 # Live inference script mapping audio to 2D Affect Regions
 └── README.md                  # Documentation and usage guide
 ```
@@ -46,9 +45,7 @@ inference/
 ## 🚀 How to Use
 
 ### 1. Train and Save the Models
-```bash
-python inference/train_and_save_model.py
-```
+Execute all cells in [`bisaya_affect_recognition.ipynb`](../bisaya_affect_recognition.ipynb) (specifically Step 15). It fits the dual Valence and Arousal SVM models on the acoustic dataset and saves the bundle to `models/bisaya_ser_models.joblib`.
 
 ### 2. Run Predictions on Any Audio File
 ```bash
