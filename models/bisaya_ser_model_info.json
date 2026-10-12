@@ -3,11 +3,11 @@
   "targets": {
     "valence": {
       "classes": [
-        "Pleasant",
-        "Unpleasant/Neutral"
+        "Not Pleasant",
+        "Pleasant"
       ],
       "distribution": {
-        "Unpleasant/Neutral": 23,
+        "Not Pleasant": 23,
         "Pleasant": 17
       }
     },
