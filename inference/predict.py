@@ -77,12 +77,14 @@ def predict_audio(audio_path: str, model_bundle_path: Path = DEFAULT_BUNDLE_PATH
     arousal_model = bundle.get("arousal_model")
 
     # 3. Valence Prediction
-    val_pred = valence_model.predict(df_features)[0]
     val_probs = {}
     if hasattr(valence_model, "predict_proba"):
         probs = valence_model.predict_proba(df_features)[0]
         for cls_name, prob in zip(valence_model.classes_, probs):
             val_probs[cls_name] = float(prob)
+        val_pred = max(val_probs, key=val_probs.get)
+    else:
+        val_pred = valence_model.predict(df_features)[0]
 
     # 4. Arousal Prediction (if dual model loaded)
     arousal_pred = None
@@ -90,11 +92,13 @@ def predict_audio(audio_path: str, model_bundle_path: Path = DEFAULT_BUNDLE_PATH
     affect_info = None
 
     if arousal_model is not None:
-        arousal_pred = arousal_model.predict(df_features)[0]
         if hasattr(arousal_model, "predict_proba"):
             probs_a = arousal_model.predict_proba(df_features)[0]
             for cls_name, prob in zip(arousal_model.classes_, probs_a):
                 arousal_probs[cls_name] = float(prob)
+            arousal_pred = max(arousal_probs, key=arousal_probs.get)
+        else:
+            arousal_pred = arousal_model.predict(df_features)[0]
 
         affect_info = get_affect_region_info(val_pred, arousal_pred)
 

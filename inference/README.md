@@ -45,7 +45,7 @@ inference/
 ## 🚀 How to Use
 
 ### 1. Train and Save the Models
-Execute all cells in [`bisaya_affect_recognition.ipynb`](../bisaya_affect_recognition.ipynb) (specifically Step 15). It fits the dual Valence and Arousal SVM models on the acoustic dataset and saves the bundle to `models/bisaya_ser_models.joblib`.
+Execute all cells in [`bisaya_affect_recognition.ipynb`](../bisaya_affect_recognition.ipynb) (specifically Step 13). It fits the empirically optimal models identified during cross-validation benchmark evaluation (**SVM RBF** for Valence and **Logistic Regression** for Arousal) on the acoustic dataset and saves the bundle to `models/bisaya_ser_models.joblib`.
 
 ### 2. Run Predictions on Any Audio File
 ```bash
