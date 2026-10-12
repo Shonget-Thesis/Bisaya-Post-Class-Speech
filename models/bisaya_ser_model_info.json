@@ -3,7 +3,7 @@
   "arousal_model_architecture": "Logistic Regression with StandardScaler",
   "targets": {
     "valence": {
-      "model": "SVM (RBF Kernel)",
+      "model": "SVM (RBF)",
       "classes": [
         "Not Pleasant",
         "Pleasant"
